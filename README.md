@@ -1,147 +1,218 @@
-# Business Memo
-
-## To:
-Product, Marketing, and Customer Success Teams
-
-## From:
-Customer Analytics Team
-
-## Subject:
-Key Churn Risk Findings and Retention Priorities
-
-## Executive Summary
-
-An exploratory analysis was conducted on customer profiles, transaction history, support interactions, web/app activity, and churn outcomes. The analysis identified several behavioral patterns that strongly differentiate retained customers from churned customers.
-
-The findings suggest that churn is primarily associated with declining customer engagement, reduced purchasing activity, and lower digital interaction rather than isolated customer support issues.
+# D2C Customer Churn Intelligence & Retention
+## Part 1 – Data Audit, EDA & Business Understanding
 
 ---
 
-# Key Findings
+## Project Overview
 
-## 1. Purchase Recency Is the Strongest Churn Indicator
+This repository contains the exploratory data analysis (EDA), data-quality assessment, and business understanding phase of a customer churn analytics project for a Direct-to-Consumer (D2C) personal-care brand.
 
-Customers who churned had an average recency of approximately 135 days compared to only 45 days for retained customers.
+The objective of this phase is to:
 
-### Business Implication
+- understand customer behavior,
+- assess data quality,
+- identify churn-risk patterns,
+- generate business hypotheses,
+- provide recommendations for future retention initiatives.
 
-Customers who have not purchased for an extended period should be considered high-priority retention candidates before they become completely inactive.
-
-### Recommended Action
-
-- Create automated win-back campaigns for customers approaching 90 days without a purchase.
-- Trigger retention workflows before customers reach high-risk inactivity levels.
-
----
-
-## 2. Low Purchase Frequency Is Associated With Churn
-
-Retained customers purchased nearly twice as often as churned customers during the observation period.
-
-### Business Implication
-
-Customers with declining order frequency may be entering the early stages of churn.
-
-### Recommended Action
-
-- Monitor frequency trends monthly.
-- Develop replenishment reminders and personalized product recommendations.
+This work serves as the foundation for customer segmentation, churn prediction modeling, and retention strategy development in subsequent project phases.
 
 ---
 
-## 3. High-Value Customers Demonstrate Better Retention
+## Business Context
 
-Retained customers spent substantially more than churned customers.
+The company wants to reduce customer churn without offering discounts indiscriminately.
 
-### Business Implication
-
-Higher customer value appears to be associated with stronger brand engagement and loyalty.
-
-### Recommended Action
-
-- Protect high-value customers through loyalty benefits and personalized experiences.
-- Identify medium-value customers with declining engagement before they migrate into higher-risk groups.
+A data-driven understanding of customer purchasing behavior, engagement patterns, support interactions, and campaign history is required before designing retention interventions.
 
 ---
 
-## 4. Digital Engagement Is Closely Linked to Retention
+## Repository Structure
 
-Retained customers generated significantly more web/app sessions than churned customers.
-
-### Business Implication
-
-Reduced platform activity may serve as an early warning signal for future churn.
-
-### Recommended Action
-
-- Monitor engagement metrics such as sessions, product views, and campaign clicks.
-- Trigger targeted engagement campaigns when activity drops below expected levels.
-
----
-
-## 5. Support Activity Does Not Necessarily Indicate Churn Risk
-
-Contrary to expectations, retained customers generated slightly more support interactions than churned customers.
-
-### Business Implication
-
-Support engagement may reflect an active customer relationship rather than dissatisfaction alone.
-
-### Recommended Action
-
-- Focus on unresolved or repeated issues rather than ticket volume alone.
-- Treat support interactions as engagement signals when evaluating customer health.
+```text
+.
+├── charts/
+│   ├── churn_distribution.png
+│   ├── frequency_vs_churn.png
+│   ├── loyalty_vs_churn.png
+│   ├── recency_vs_churn.png
+│   └── sessions_vs_churn.png
+│
+├── notebooks/
+│   └── eda_audit.ipynb
+│
+├── reports/
+│   ├── data_quality_report.md
+│   └── business_memo.md
+│
+├── requirements.txt
+└── README.md
+```
 
 ---
 
-# Areas Requiring Further Investigation
+## Dataset
 
-The following topics should be investigated before launching large-scale retention campaigns:
+The analysis uses the following datasets:
 
-### Loyalty Program Effectiveness
+- customers.csv
+- orders.csv
+- support_tickets.csv
+- web_events_snapshot.csv
+- churn_labels.csv
+- intervention_history.csv
+- rfm_modeling_snapshot.csv
 
-Evaluate whether loyalty program participation directly contributes to improved retention or simply reflects stronger customer engagement.
+### Snapshot Date
 
-### Campaign Effectiveness
+```text
+2025-09-30
+```
 
-Analyze whether previous retention campaigns such as free shipping, bundle discounts, and new product launches improved customer retention outcomes.
+### Important Leakage Rule
 
-### Support Experience Quality
+Only data available on or before the snapshot date is used for behavioral analysis.
 
-Investigate whether long resolution times, negative sentiment, or reopened tickets are associated with higher churn risk.
-
-### Customer Lifecycle Patterns
-
-Assess whether recently acquired customers churn for different reasons than long-tenured customers.
-
----
-
-# Recommended Retention Priorities
-
-Given limited retention resources, the company should prioritize:
-
-### Priority 1
-
-Customers with:
-
-- High recency
-- Low frequency
-- Declining digital engagement
-
-These customers appear most likely to churn and offer the greatest opportunity for intervention.
-
-### Priority 2
-
-Customers showing early engagement decline but who still exhibit moderate spending behavior.
-
-### Priority 3
-
-Highly engaged and loyal customers who should be protected through loyalty and VIP programs rather than aggressive discounting.
+Orders occurring after the snapshot date were identified and excluded from customer behavior analysis because they belong to the target window used to define churn.
 
 ---
 
-# Final Recommendation
+## Key Data Quality Findings
 
-The analysis indicates that churn is largely preceded by measurable declines in purchasing activity and digital engagement. Rather than applying blanket discounts, the company should implement targeted retention strategies focused on customers displaying early warning signals such as increased recency, reduced purchase frequency, and declining platform engagement.
+### Missing Values
 
-A data-driven retention program built around these indicators is likely to deliver stronger ROI than broad-based promotional campaigns.
+| Column | Missing Count |
+|----------|----------:|
+| loyalty_tier | 1,386 |
+| skin_type | 401 |
+| rating | 80 |
+
+### Duplicate-Like Records
+
+- 12 duplicate-like order records identified.
+
+### Post-Snapshot Orders
+
+| Category | Count |
+|----------|----------:|
+| Pre-Snapshot Orders | 8,137 |
+| Post-Snapshot Orders | 1,872 |
+
+### Join Integrity
+
+- No unmatched customer IDs were identified across datasets.
+
+---
+
+## Key Business Findings
+
+### Finding 1
+
+Customers who churned exhibited significantly higher recency compared to retained customers.
+
+### Finding 2
+
+Customers with lower purchase frequency were substantially more likely to churn.
+
+### Finding 3
+
+Retained customers generated higher monetary value than churned customers.
+
+### Finding 4
+
+Lower web/app engagement was associated with increased churn risk.
+
+### Finding 5
+
+Support ticket volume alone was not a reliable indicator of churn risk.
+
+---
+
+## Churn Risk Hypotheses
+
+The analysis produced the following churn hypotheses:
+
+1. Customers with longer periods since their last purchase are more likely to churn.
+2. Lower purchase frequency is associated with increased churn risk.
+3. Lower customer spend is associated with increased churn risk.
+4. Reduced digital engagement is associated with increased churn risk.
+5. Customer engagement may be more important than support-ticket volume alone.
+
+---
+
+## How to Run
+
+### 1. Clone Repository
+
+```bash
+git clone <repository-url>
+cd d2c-churn-part1-eda
+```
+
+### 2. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Dataset Placement
+
+Place all CSV files inside the shared project data folder:
+
+```text
+../../data/
+```
+
+or update the notebook paths as required.
+
+### 4. Launch Jupyter Notebook
+
+```bash
+jupyter lab
+```
+
+Open:
+
+```text
+notebooks/eda_audit.ipynb
+```
+
+and execute all cells.
+
+---
+
+## Outputs
+
+### Notebook
+
+- eda_audit.ipynb
+
+### Reports
+
+- data_quality_report.md
+- business_memo.md
+
+### Visualizations
+
+- churn_distribution.png
+- loyalty_vs_churn.png
+- recency_vs_churn.png
+- frequency_vs_churn.png
+- sessions_vs_churn.png
+
+---
+
+## Technologies Used
+
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- Jupyter Notebook
+
+---
+
+## Conclusion
+
+The analysis indicates that churn is primarily associated with declining purchasing behavior and reduced customer engagement. Customers showing increasing purchase recency, declining order frequency, and lower digital activity should be prioritized for retention efforts before they become inactive.
