@@ -140,6 +140,16 @@ The analysis produced the following churn hypotheses:
 
 ---
 
+### Key Results
+
+- 46.96% customer churn rate observed.
+- Customers who churned showed 3× higher recency.
+- Retained customers purchased nearly 2× more frequently.
+- Retained customers spent approximately 2× more.
+- Lower web/app engagement was strongly associated with churn.
+
+---
+
 ## How to Run
 
 ### 1. Clone Repository
